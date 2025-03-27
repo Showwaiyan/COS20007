@@ -1,10 +1,12 @@
 # Ignore Visual Studio and Rider IDE settings
-.vs/
+.vscode/
 .idea/
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
+*.sln
+*.csproj
 
 # Ignore build output
 bin/
