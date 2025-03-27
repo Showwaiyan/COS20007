@@ -1,0 +1,43 @@
+# Ignore Visual Studio and Rider IDE settings
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore build output
+bin/
+obj/
+out/
+*.dll
+*.exe
+*.pdb
+*.log
+
+# Ignore package and dependencies
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.assets.json
+PackageReferences/
+.nuget/
+
+# Ignore user secrets and environment configs
+secrets.json
+.env
+*.config.local
+
+# Ignore temporary files
+*.tmp
+*.cache
+*.pid
+*.swp
+*.swn
+*.swo
+
+# Ignore Rider / JetBrains
+.idea/
+*.dotCover
+ReSharperSettings.xml
