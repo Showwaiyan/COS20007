@@ -1,52 +1,54 @@
-﻿using Xunit;
+﻿using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using SwinAdventure;
 
 namespace SwinAdventure.Tests
 {
+    [TestFixture]
     public class IndentifiableObjectTest
     {
         private IndentifiableObject testObject = new IndentifiableObject(new string[] { "105293041", "Show Wai Yan", "Miss Siti" });
         private IndentifiableObject testObjectEmpty = new IndentifiableObject(new string[] { });
 
-        [Fact]
+        [Test]
         public void TestAreYou()
         {
 
             string testString = "105293041";
 
-            Assert.True(testObject.AreYou(testString));
+            ClassicAssert.True(testObject.AreYou(testString));
         }
 
-        [Fact]
+        [Test]
         public void TestNotAreYou()
         {
             string testString = "1O5293O41";
-            Assert.False(testObject.AreYou(testString));
+            ClassicAssert.False(testObject.AreYou(testString));
         }
 
-        [Fact]
+        [Test]
         public void TestCaseSensitive()
         {
             string testString = "inTI";
             testObject.AddIdentifier(testString);
-            Assert.True(testObject.AreYou(testString));
+            ClassicAssert.True(testObject.AreYou(testString));
         }
 
-        [Fact]
+        [Test]
         public void TestFirstID()
         {
             string firstIndentifier = "105293041";
-            Assert.Equal(firstIndentifier, testObject.FirstId);
+            ClassicAssert.AreEqual(firstIndentifier, testObject.FirstId);
         }
 
-        [Fact]
+        [Test]
         public void TestFirstIdWithNoIDs()
         {
             string noIndentifier = "";
-            Assert.Equal(noIndentifier, testObjectEmpty.FirstId);
+            ClassicAssert.AreEqual(noIndentifier, testObjectEmpty.FirstId);
         }
 
-        [Fact]
+        [Test]
         public void TestAddID()
         {
             string[] testStrings = { "JavaScript", "Linux", "C#", "Rust", "DotNet" };
@@ -58,18 +60,18 @@ namespace SwinAdventure.Tests
 
             foreach (string s in testStrings)
             {
-                Assert.True(testObject.AreYou(s));
+                ClassicAssert.True(testObject.AreYou(s));
             }
         }
 
-        [Fact]
+        [Test]
         public void TestPrivilegeEscalation()
         {
-            string tutorialID = "C1";
+            string tutorialID = "105293041";
             string lastFourDigitStudentID = "3041";
             testObject.PrivilegeEscalation(lastFourDigitStudentID);
 
-            Assert.Equal(tutorialID, testObject.FirstId);
+            ClassicAssert.AreEqual(tutorialID, testObject.FirstId);
         }
 
     }
