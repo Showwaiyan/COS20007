@@ -31,7 +31,7 @@ namespace SwinAdventure
         {
             if (pin == "3041")
             {
-                _identifiers[0] = "C1";
+                _identifiers[0] = "105293041";
             }
         }
 
