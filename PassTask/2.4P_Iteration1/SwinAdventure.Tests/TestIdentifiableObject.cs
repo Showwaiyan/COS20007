@@ -2,7 +2,7 @@
 using NUnit.Framework.Legacy;
 using SwinAdventure;
 
-namespace SwinAdventure.Tests
+namespace UnitTests
 {
     [TestFixture]
     public class IndentifiableObjectTest
