@@ -1,4 +1,4 @@
-﻿namespace ClockProgrm
+﻿namespace ClockProgram
 {
     public class Program
     {
