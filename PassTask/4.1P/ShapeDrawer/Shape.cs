@@ -22,12 +22,6 @@ namespace ShapeDrawer
         }
 
         // Properties
-        public Color Color
-        {
-            get { return _color; }
-            set { _color = value; }
-        }
-
         public float X
         {
             get { return _x; }
@@ -38,7 +32,11 @@ namespace ShapeDrawer
             get { return _y; }
             set { _y = value; }
         }
-
+        public Color Color
+        {
+            get { return _color; }
+            set { _color = value; }
+        }
         public bool Selected
         {
             get { return this._selected; }
