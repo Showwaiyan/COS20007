@@ -7,7 +7,7 @@ namespace ShapeDrawer
     {
         private enum ShapeKind
         {
-            Rectangele,
+            Rectangle,
             Circle,
             Line
         }
@@ -27,7 +27,7 @@ namespace ShapeDrawer
 
                 if (SplashKit.KeyTyped(KeyCode.RKey))
                 {
-                    kindToAdd = ShapeKind.Rectangele;
+                    kindToAdd = ShapeKind.Rectangle;
                 }
                 if (SplashKit.KeyTyped(KeyCode.CKey))
                 {
