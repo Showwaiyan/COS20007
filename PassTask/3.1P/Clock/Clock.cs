@@ -62,15 +62,19 @@ namespace ClockProgram
         }
 
         // Properties
-        public string Hour
+        private string Hour
         {
-            get { return _hour.Ticks.ToString("D2"); }
+            get
+            {
+                if (_hour.Ticks == 0) _hour.Increment();
+                return _hour.Ticks.ToString("D2");
+            }
         }
-        public string Minute
+        private string Minute
         {
             get { return _minute.Ticks.ToString("D2"); }
         }
-        public string Second
+        private string Second
         {
             get { return _second.Ticks.ToString("D2"); }
         }

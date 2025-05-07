@@ -18,7 +18,7 @@ namespace ClockTest
         {
             clock.Reset();
             clock.Tick();
-            Assert.That(clock.GetTime(), Is.EqualTo("00:00:01"));
+            Assert.That(clock.GetTime(), Is.EqualTo("01:00:01"));
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace ClockTest
             for (int i = 0; i < second; i++) clock.Tick();
 
 
-            Assert.That(clock.GetTime(), Is.EqualTo($"00:00:{second.ToString("D2")}"));
+            Assert.That(clock.GetTime(), Is.EqualTo($"01:00:{second.ToString("D2")}"));
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace ClockTest
             clock.Reset();
             int second = 60;
             for (int i = 0; i < second; i++) clock.Tick();
-            Assert.That(clock.GetTime(), Is.EqualTo("00:01:00"));
+            Assert.That(clock.GetTime(), Is.EqualTo("01:01:00"));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace ClockTest
             int minute = 3;
             int second = 60 * minute;
             for (int i = 0; i < second; i++) clock.Tick();
-            Assert.That(clock.GetTime(), Is.EqualTo($"00:{minute.ToString("D2")}:00"));
+            Assert.That(clock.GetTime(), Is.EqualTo($"01:{minute.ToString("D2")}:00"));
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace ClockTest
             int second = 190;
             int minute = second / 60;
             for (int i = 0; i < second; i++) clock.Tick();
-            Assert.That(clock.GetTime(), Is.EqualTo($"00:{minute.ToString("D2")}:{(second % 60).ToString("D2")}"));
+            Assert.That(clock.GetTime(), Is.EqualTo($"01:{minute.ToString("D2")}:{(second % 60).ToString("D2")}"));
         }
 
         [Test]
