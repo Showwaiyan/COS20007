@@ -56,7 +56,7 @@ namespace ShapeDrawer
                 {
                     StartPoint = new Point2D() { X = this.X, Y = this.Y },
                     EndPoint = new Point2D() { X = this.EndX, Y = this.EndY },
-                });
+                },10);
         }
 
         public override void SaveTo(StreamWriter writer)
