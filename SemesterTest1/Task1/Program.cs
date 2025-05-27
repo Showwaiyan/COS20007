@@ -47,7 +47,7 @@
             Folder Test2Child = new Folder("Test2Child"); // Creating child folder of Parent
 
             // Add B[2] files to Test2Child
-            for (int i = 0; i < B[1]; i++)
+            for (int i = 0; i < B[2]; i++)
             {
                 Test2Child.Add(
                     new File(
