@@ -1,0 +1,60 @@
+sequenceDiagram
+    participant C as Customer
+    participant SC as ShoppingCart
+    participant R as Restaurant
+    participant F as Food
+    participant BA as BankAccount
+    
+    Note over C, F: Customer Order Placement Process
+    
+    %% Browse and View Menu
+    C->>+R: BrowseRestaurants()
+    R->>+F: GetMenu()
+    F-->>-R: List<Food>
+    R-->>-C: Restaurant Menu
+    
+    Note over C, F: Customer browses available restaurants and menus
+    
+    %% Add Items to Cart
+    C->>+SC: AddItem(selectedFood)
+    SC->>+F: GetDetails()
+    F-->>-SC: Food Details
+    SC->>SC: AddToCart(food, quantity)
+    SC-->>-C: Item Added Confirmation
+    
+    Note over C, SC: Customer adds multiple items to cart
+    
+    %% Repeat for multiple items
+    C->>+SC: AddItem(anotherFood)
+    SC->>SC: AddToCart(food, quantity)
+    SC-->>-C: Item Added Confirmation
+    
+    %% Checkout Process
+    C->>+SC: Checkout()
+    SC->>SC: CalculateTotal()
+    SC-->>C: Display Total Amount
+    
+    Note over C, BA: Payment Processing
+    
+    %% Payment Processing
+    C->>+BA: ProcessPayment(totalAmount)
+    BA->>BA: ValidateAccount()
+    BA->>BA: DeductBalance(amount)
+    BA-->>-C: Payment Success
+    
+    %% Place Order
+    C->>+SC: PlaceOrder()
+    SC->>+R: CreateOrder(cartItems)
+    R->>R: ProcessOrder()
+    R-->>-SC: Order Confirmation
+    SC->>SC: Clear()
+    SC-->>-C: Order Placed Successfully
+    
+    Note over C, R: Order Status Updates
+    
+    %% Status Updates
+    R->>R: UpdateStatus(InProgress)
+    R-->>C: Order In Progress
+    R->>R: UpdateStatus(Finish Order)
+    R->>R: UpdateStatus(Customer Picked up)
+    R-->>C: Order Picked up
