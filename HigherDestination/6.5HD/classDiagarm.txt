@@ -1,0 +1,301 @@
+---
+config:
+  theme: mc
+  look: classic
+  layout: elk
+---
+classDiagram
+    class User {
+        - userId : int
+        - username : string
+        - email : string
+        - password : string
+        - isAuthenticated : bool
+        - userType : UserType
+        - bankAccount : BankAccount
+        + Login() : bool
+        + Logout() : void
+        + UpdateProfile() : bool
+        + Subscribe(observer : Observer) : void
+        + Unsubscribe(observer : Observer) : void
+        + NotifyObservers(message : string) : void
+    }
+    
+    class Customer {
+        - shoppingCart : ShoppingCart
+        - orderHistory : List~Order~
+        - notifications : List~Notification~
+        + AddToCart(item : Food) : void
+        + PlaceOrder() : bool
+        + BrowseRestaurants() : List~Restaurant~
+        + ViewMenu(restaurant : Restaurant) : List~Food~
+        + TrackOrder(orderId : int) : string
+        + Update(notification : Notification) : void
+    }
+    
+    class Restaurant {
+        - restaurantId : int
+        - name : string
+        - address : string
+        - rating : double
+        - menu : List~Food~
+        - category : string
+        - operatingHours : string
+        - notifications : List~Notification~
+        + ProcessOrder(order : Order) : bool
+        + GetMenu() : List~Food~
+        + AddMenuItem(item : Food) : bool
+        + ViewOrders() : List~Order~
+        + UpdateOrderStatus(orderId : int, status : OrderStatus) : bool
+        + UpdateMenu() : bool
+        + Update(notification : Notification) : void
+    }
+    
+    class DeliveryDriver {
+        - driverId : int
+        - vehicleType : VehicleType
+        - licenseNumber : string
+        - currentLocation : Location
+        - isAvailable : bool
+        - activeDeliveries : List~Delivery~
+        - rating : double
+        - notifications : List~Notification~
+        + AcceptDelivery(delivery : Delivery) : bool
+        + UpdateLocation(location : Location) : void
+        + CompleteDelivery(deliveryId : int) : bool
+        + GetAvailableDeliveries() : List~Delivery~
+        + Update(notification : Notification) : void
+    }
+    
+    class Food {
+        <<abstract>>
+        - foodId : int
+        - name : string
+        - price : decimal
+        - description : string
+        - category : FoodCategory
+        - restaurant : Restaurant
+        - isAvailable : bool
+        - prepTime : int
+        + GetDetails() : string
+    }
+    
+    class Dish {
+        - servingSize : string
+        - spiceLevel : int
+        - calories : int
+        - ingredients : List~string~
+    }
+    
+    class Drink {
+        - volume : string
+        - temperature : Temperature
+        - isCarbonated : bool
+        - hasAlcohol : bool
+    }
+    
+    class Snack {
+        - packageSize : string
+        - isHealthy : bool
+        - allergens : List~string~
+    }
+    
+    class ShoppingCart {
+        - items : List~Food~
+        - quantities : Dictionary~Food_int~
+        + AddItem(item : Food) : void
+        + RemoveItem(item : Food) : void
+        + CalculateTotal() : decimal
+        + Clear() : void
+        + ConvertToOrder() : Order
+    }
+    
+    class BankAccount {
+        - accountNumber : string
+        - balance : decimal
+        - pin : string
+        - isActive : bool
+        + ProcessPayment(amount : decimal) : bool
+        + GetBalance() : decimal
+    }
+    
+    class Order {
+        - orderId : int
+        - customer : Customer
+        - restaurant : Restaurant
+        - orderItems : List~Food~
+        - quantities : Dictionary~Food_int~
+        - totalAmount : decimal
+        - orderDate : DateTime
+        - status : OrderStatus
+        - deliveryAddress : string
+        - delivery : Delivery
+        - observers : List~Observer~
+        + CalculateTotal() : decimal
+        + UpdateStatus(status : OrderStatus) : void
+        + GetOrderDetails() : string
+        + AddItem(item : Food, quantity : int) : void
+        + AddObserver(observer : Observer) : void
+        + RemoveObserver(observer : Observer) : void
+        + NotifyObservers() : void
+    }
+    
+    class Delivery {
+        - deliveryId : int
+        - order : Order
+        - driver : DeliveryDriver
+        - pickupLocation : Location
+        - deliveryLocation : Location
+        - estimatedTime : DateTime
+        - actualTime : DateTime
+        - deliveryFee : decimal
+        - status : DeliveryStatus
+        - trackingNumber : string
+        + AssignDriver(driver : DeliveryDriver) : bool
+        + UpdateStatus(status : DeliveryStatus) : void
+        + CalculateEstimatedTime() : DateTime
+        + GetTrackingInfo() : string
+    }
+    
+    class DeliveryService {
+        - availableDrivers : List~DeliveryDriver~
+        - activeDeliveries : List~Delivery~
+        + FindAvailableDriver(location : Location) : DeliveryDriver
+        + AssignDelivery(order : Order) : Delivery
+        + TrackDelivery(trackingNumber : string) : string
+        + CalculateDeliveryFee(distance : double) : decimal
+    }
+    
+    class Observer {
+        <<interface>>
+        + Update(notification : Notification) : void
+    }
+    
+    class NotificationService {
+        - observers : List~Observer~
+        + Subscribe(observer : Observer) : void
+        + Unsubscribe(observer : Observer) : void
+        + NotifyAll(notification : Notification) : void
+        + SendNotification(userId : int, message : string) : void
+    }
+    
+    class Notification {
+        - notificationId : int
+        - userId : int
+        - message : string
+        - timestamp : DateTime
+        - type : NotificationType
+        - isRead : bool
+        + MarkAsRead() : void
+        + GetContent() : string
+    }
+    
+    class Location {
+        - latitude : double
+        - longitude : double
+        - address : string
+        + CalculateDistance(other : Location) : double
+        + GetCoordinates() : string
+    }
+    
+    class UserType {
+        <<enumeration>>
+        Customer
+        RestaurantOwner
+        DeliveryDriver
+        Admin
+    }
+    
+    class FoodCategory {
+        <<enumeration>>
+        MainCourse
+        Beverage
+        Snack
+    }
+    
+    class OrderStatus {
+        <<enumeration>>
+        Placed
+        Confirmed
+        Preparing
+        Ready
+        OutForDelivery
+        Delivered
+        Cancelled
+    }
+    
+    class DeliveryStatus {
+        <<enumeration>>
+        Assigned
+        PickedUp
+        InTransit
+        Delivered
+        Failed
+    }
+    
+    class VehicleType {
+        <<enumeration>>
+        Bicycle
+        Motorcycle
+        Car
+        Van
+    }
+    
+    class NotificationType {
+        <<enumeration>>
+        OrderUpdate
+        DeliveryUpdate
+        Payment
+        Promotion
+        System
+    }
+    
+    %% Inheritance relationships
+    User <|-- Customer : inherits
+    User <|-- Restaurant : inherits
+    User <|-- DeliveryDriver : inherits
+    Food <|-- Dish : inherits
+    Food <|-- Drink : inherits
+    Food <|-- Snack : inherits
+    
+    %% Observer Pattern Implementation
+    Observer <|.. Customer : implements
+    Observer <|.. Restaurant : implements
+    Observer <|.. DeliveryDriver : implements
+    
+    %% Composition and Aggregation relationships
+    Customer "1" --> "1" ShoppingCart : has
+    Customer "1" ..> "1..*" Food : buy
+    Customer "1" ..> "0..*" Restaurant : browse
+    User "1" --> "1" BankAccount : uses
+    Customer "1" --o "0..*" Order : places
+    Restaurant "1" --o "1..*" Food : contains
+    Restaurant "1" ..> "0..*" Order : receives
+    ShoppingCart "1" --o "0..*" Food : contains
+    Order "1" --o "1..*" Food : contains
+    Order "1" --o "1..*" Observer : contains
+    
+    %% Delivery Service relationships
+    Order "1" --> "0..1" Delivery : has
+    Delivery "1" --> "1" DeliveryDriver : assigned to
+    DeliveryService "1" --o "0..*" DeliveryDriver : manages
+    DeliveryService "1" --o "0..*" Delivery : handles
+    Delivery "1" --> "1" Location : pickup
+    Delivery "1" --> "1" Location : destination
+    DeliveryDriver "1" --o "0..*" Delivery : contain
+    
+    %% Observer Pattern relationships
+    NotificationService "1" --o "0..*" Observer : notifies
+    NotificationService "1" ..> "0..*" Notification : sends
+    Order "1" --> "0..*" Observer : notifies
+    Customer "1" --o "0..*" Notification : contain
+    Restaurant "1" --o "0..*" Notification : contain
+    User "1" ..> "0..*" Observer : un/subscribe
+    
+    %% Enumeration usage
+    User --> UserType : uses
+    Food --> FoodCategory : categorized by
+    Order --> OrderStatus : has
+    Delivery --> DeliveryStatus : has
+    DeliveryDriver --> VehicleType : uses
+    Notification --> NotificationType : categorized by

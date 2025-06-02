@@ -1,0 +1,114 @@
+---
+config:
+  theme: mc
+  look: classic
+  layout: elk
+---
+sequenceDiagram
+    participant C as Customer
+    participant SC as ShoppingCart
+    participant O as Order
+    participant NS as NotificationService
+    participant R as Restaurant
+    participant DS as DeliveryService
+    participant D as Delivery
+    participant DD as DeliveryDriver
+    participant BA as BankAccount
+
+    %% Order Placement Phase
+    Note over C, BA: Order Placement and Setup
+    C->>SC: AddItem(food)
+    C->>SC: CalculateTotal()
+    SC-->>C: totalAmount
+    C->>SC: ConvertToOrder()
+    SC->>O: new Order()
+    O-->>SC: order
+    SC-->>C: order
+
+    %% Observer Pattern Setup
+    Note over O, NS: Observer Pattern Registration
+    O->>NS: Subscribe(Customer)
+    O->>NS: Subscribe(Restaurant)
+    NS-->>O: subscription confirmed
+
+    %% Payment Processing
+    Note over C, BA: Payment Processing
+    C->>BA: ProcessPayment(totalAmount)
+    BA-->>C: payment successful
+    C->>O: PlaceOrder()
+    O->>O: UpdateStatus(Placed)
+
+    %% Notification to Restaurant (Observer Pattern)
+    Note over O, R: Order Notification via Observer Pattern
+    O->>NS: NotifyObservers("New Order Placed")
+    NS->>R: Update(notification)
+    R->>R: ProcessOrder(order)
+    R->>O: UpdateStatus(Confirmed)
+
+    %% Restaurant Confirms and Starts Preparing
+    O->>NS: NotifyObservers("Order Confirmed")
+    NS->>C: Update(notification)
+    R->>O: UpdateStatus(Preparing)
+    O->>NS: NotifyObservers("Order Being Prepared")
+    NS->>C: Update(notification)
+
+    %% Delivery Service Assignment
+    Note over R, DD: Delivery Assignment Process
+    R->>DS: AssignDelivery(order)
+    DS->>DS: FindAvailableDriver(location)
+    DS->>DD: AssignDelivery(delivery)
+    DS->>D: new Delivery(order, driver)
+    D-->>DS: delivery created
+    DS-->>R: delivery assigned
+
+    %% Driver Notification (Observer Pattern)
+    DS->>NS: Subscribe(DeliveryDriver)
+    DS->>NS: NotifyObservers("New Delivery Assignment")
+    NS->>DD: Update(notification)
+    DD->>D: AcceptDelivery()
+    D->>D: UpdateStatus(Assigned)
+
+    %% Order Ready for Pickup
+    Note over R, DD: Order Ready and Pickup
+    R->>O: UpdateStatus(Ready)
+    O->>NS: NotifyObservers("Order Ready for Pickup")
+    NS->>DD: Update(notification)
+    NS->>C: Update(notification)
+
+    %% Driver Picks Up Order
+    DD->>D: UpdateStatus(PickedUp)
+    DD->>O: UpdateStatus(OutForDelivery)
+    O->>NS: NotifyObservers("Order Out for Delivery")
+    NS->>C: Update(notification)
+
+    %% Delivery in Transit
+    DD->>DD: UpdateLocation(currentLocation)
+    DD->>D: UpdateStatus(InTransit)
+    D->>C: GetTrackingInfo()
+    D-->>C: tracking details
+
+    %% Delivery Completion
+    Note over DD, C: Delivery Completion
+    DD->>D: UpdateStatus(Delivered)
+    DD->>O: UpdateStatus(Delivered)
+    O->>NS: NotifyObservers("Order Delivered")
+    NS->>C: Update(notification)
+    NS->>R: Update(notification)
+    DD->>D: CompleteDelivery()
+
+    %% Final Status Updates
+    Note over C, NS: Final Notifications
+    C->>C: Update order history
+    R->>R: Update order records
+    DD->>DD: Update delivery history
+
+    %% Alternative Flow - Order Cancellation
+    Note over C, NS: Alternative: Order Cancellation
+    alt Order Cancelled
+        C->>O: CancelOrder()
+        O->>O: UpdateStatus(Cancelled)
+        O->>NS: NotifyObservers("Order Cancelled")
+        NS->>R: Update(notification)
+        NS->>DD: Update(notification)
+        O->>BA: RefundPayment()
+    end
