@@ -114,7 +114,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void InvalidLook()
+        public void TestInvalidLook()
         {
             string excepted = "I don\'t know how to look like that";
             string testOutPut = look.Execute(testPlayer, new string[] { "look", "around" });
