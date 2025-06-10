@@ -18,8 +18,8 @@ class IdentifiableObject {
         - name : string
         + GameObject(ids : string[], name : string, desc : string)
         + Name : string
-        + ShortDescription : string
-        + FullDescription : string
+        + ShortDescription : string ~~virtual~~
+        + FullDescription : string ~~virtual~~
     }
     class IHaveInventory {
         <<interface>>
@@ -34,7 +34,7 @@ class IdentifiableObject {
         + Inventory : Inventory
         + ArrivalJourney : string
         + ShortDescription : string
-        + FullDescription : string
+        + FullDescription : string ~~override~~
         + Exits : Dictionary~string, Location~
         + Locate(id : string) : GameObject
         + FindExists() : string
@@ -43,7 +43,7 @@ class IdentifiableObject {
         - _inventory : Inventory
         - _currentLocation : Location
         + Player(name : string, desc : string, spawnLocation : Location)
-        + FullDescription : string
+        + FullDescription : string ~~override~~
         + Inventory : Inventory
         + CurrentLocation : Location
         + Locate(id : string) : GameObject
@@ -53,11 +53,11 @@ class IdentifiableObject {
     class Command {
         <<abstract>>
         + Command(ids : string[])
-        + Execute(p : Player, text : string[]) : string
+        + Execute(p : Player, text : string[]) : string ~~abstract~~
     }
     class LookCommand {
         + LookCommand()
-        + Execute(p : Player, text : string[]) : string
+        + Execute(p : Player, text : string[]) : string ~~override~~
         - FetchContainer(p : Player, containerId : string) : IHaveInventory
         - LookAtIn(thingId : string, container : IHaveInventory) : string
     }
@@ -83,4 +83,5 @@ class IdentifiableObject {
     Location --> Location : uses exits (Dictionary)
     LookCommand ..> Player : uses
     LookCommand ..> IHaveInventory : uses
+
 
