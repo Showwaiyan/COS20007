@@ -1,0 +1,87 @@
+---
+config:
+  layout: elk
+  look: classic
+---
+classDiagram
+class IdentifiableObject {
+        - _identifiers : List~string~
+        + IdentifiableObject(idents : string[])
+        + AreYou(id : string) : bool
+        + AddIdentifier(id : string) : void
+        + PrivilegeEscalation(pin : string) : void
+        + FirstId : string
+    }
+    class GameObject {
+        <<abstract>>
+        - description : string
+        - name : string
+        + GameObject(ids : string[], name : string, desc : string)
+        + Name : string
+        + ShortDescription : string ~~virtual~~
+        + FullDescription : string ~~virtual~~
+    }
+    class IHaveInventory {
+        <<interface>>
+        + Locate(id : string) : GameObject
+        + Name : string
+    }
+    class Location {
+        - _inventory : Inventory
+        - _arrivalJourney : string
+        - _exits : Dictionary~string, Location~
+        + Location(ids : string[], name : string, description : string, arrivalJourney : string)
+        + Inventory : Inventory
+        + ArrivalJourney : string
+        + ShortDescription : string
+        + FullDescription : string ~~override~~
+        + Exits : Dictionary~string, Location~
+        + Locate(id : string) : GameObject
+        + FindExists() : string
+    }
+    class Player {
+        - _inventory : Inventory
+        - _currentLocation : Location
+        + Player(name : string, desc : string, spawnLocation : Location)
+        + FullDescription : string ~~override~~
+        + Inventory : Inventory
+        + CurrentLocation : Location
+        + Locate(id : string) : GameObject
+        + WhereAmI() : string
+        + Arrive() : string
+    }
+    class Command {
+        <<abstract>>
+        + Command(ids : string[])
+        + Execute(p : Player, text : string[]) : string ~~abstract~~
+    }
+    class LookCommand {
+        + LookCommand()
+        + Execute(p : Player, text : string[]) : string ~~override~~
+        - FetchContainer(p : Player, containerId : string) : IHaveInventory
+        - LookAtIn(thingId : string, container : IHaveInventory) : string
+    }
+    class Inventory {
+        - _items : List~Item~
+        + Inventory()
+        + ItemList : string
+        + HasItem(id : string) : bool
+        + Put(itm : Item) : void
+        + Take(id : string) : Item
+        + Fetch(id : string) : Item
+    }
+    GameObject --|> IdentifiableObject : extends
+    Location --|> GameObject : extends
+    Player --|> GameObject : extends
+    LookCommand --|> Command : extends
+    Command --|> IdentifiableObject : extends
+    Location ..|> IHaveInventory : implements
+    Player ..|> IHaveInventory : implements
+    Location --> Inventory : has
+    Player --> Inventory : has
+    Player --> Location : has
+    Location --> Location : uses exits (Dictionary)
+    LookCommand ..> Player : uses
+    LookCommand ..> IHaveInventory : uses
+
+

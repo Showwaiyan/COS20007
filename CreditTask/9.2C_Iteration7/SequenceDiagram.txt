@@ -1,0 +1,48 @@
+sequenceDiagram
+    participant Program
+    participant Player
+    participant Inventory as Player.Inventory
+    participant Location as Player.CurrentLocation
+    participant LocationInventory as Location.Inventory
+    
+   Program->>+Player: Locate(id)
+    
+    Note over Player: Check if looking for self
+    Player->>Player: AreYou(id)
+    alt Player matches id
+        Player--> Program: return this
+    else Player doesn't match id
+        Note over Player: Search in player's inventory
+        Player->>+Inventory: Fetch(id)
+        Inventory-->>-Player: GameObject or null
+        
+        alt Item found in player inventory
+            Player--> Program: return GameObject
+        else Item not found in player inventory
+            Note over Player: Search in current location
+            Player->>+Location: Locate(id)
+            
+            Note over Location: Check if location matches id
+            Location->>Location: AreYou(id)
+
+            
+            alt Location matches id
+                
+                Player--> Program: return Location
+            else Location doesn't match id
+                Note over Location: Search in location's inventory
+                Location->>+LocationInventory: Fetch(id)
+                LocationInventory-->>-Location: GameObject or null
+                Location-->>-Player: GameObject or null
+                
+                alt Item found in location
+                    Player--> Program: return GameObject
+                else Item not found anywhere
+                    Player--> Program: return null
+                end
+            end
+        end
+    end
+    
+    deactivate Player
+
