@@ -55,7 +55,7 @@ namespace UnitTests
         [Test]
         public void TestLookAtUnk()
         {
-            string excepted = "I cannot find the gem in the bag";
+            string excepted = $"I cannot find the gem in the {testPlayer.Name}";
             string testOutPut = look.Execute(testPlayer, new string[] { "look", "at", "Gem" });
             ClassicAssert.That(testOutPut, Is.EqualTo(excepted));
         }
@@ -99,7 +99,7 @@ namespace UnitTests
         [Test]
         public void TestLookAtNoGemInBag()
         {
-            string excepted = "I cannot find the gem in the bag";
+            string excepted = $"I cannot find the gem in the {bag.Name}";
             string testOutPut = look.Execute(
                 testPlayer,
                 new string[] { "look", "at", "Gem", "in", "bag" }
@@ -114,11 +114,11 @@ namespace UnitTests
             string testOutPut = look.Execute(testPlayer, new string[] { "look", "around" });
             ClassicAssert.That(testOutPut, Is.EqualTo(excepted));
 
-            excepted = "Error in look input";
+            excepted = "I don\'t know how to look like that";
             testOutPut = look.Execute(testPlayer, new string[] { "hello", "105293041" });
             ClassicAssert.That(testOutPut, Is.EqualTo(excepted));
 
-            excepted = "I cannot find the show wai yan in the bag";
+            excepted = $"I cannot find the show wai yan in the {testPlayer.Name}";
             testOutPut = look.Execute(testPlayer, new string[] { "look", "at", "Show Wai Yan" });
             ClassicAssert.That(testOutPut, Is.EqualTo(excepted));
         }
