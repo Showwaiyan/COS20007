@@ -33,7 +33,9 @@ namespace SwinAdventure
                 "northeast",
                 "ne",
                 "up",
+                "u",
                 "down",
+                "d"
             };
 
             // Check text has no more 3 word

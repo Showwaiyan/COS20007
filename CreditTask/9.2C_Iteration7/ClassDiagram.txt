@@ -1,43 +1,38 @@
 ---
 config:
-  layout: elk
+  theme: mc
   look: classic
+  layout: elk
 ---
 classDiagram
-class IdentifiableObject {
-        - _identifiers : List~string~
-        + IdentifiableObject(idents : string[])
-        + AreYou(id : string) : bool
-        + AddIdentifier(id : string) : void
-        + PrivilegeEscalation(pin : string) : void
-        + FirstId : string
-    }
     class GameObject {
         <<abstract>>
-        - description : string
-        - name : string
-        + GameObject(ids : string[], name : string, desc : string)
-        + Name : string
-        + ShortDescription : string ~~virtual~~
-        + FullDescription : string ~~virtual~~
+
     }
     class IHaveInventory {
         <<interface>>
+        + Inventory : Inventory
         + Locate(id : string) : GameObject
-        + Name : string
     }
     class Location {
         - _inventory : Inventory
-        - _arrivalJourney : string
-        - _exits : Dictionary~string, Location~
-        + Location(ids : string[], name : string, description : string, arrivalJourney : string)
-        + Inventory : Inventory
-        + ArrivalJourney : string
-        + ShortDescription : string
+        - _exits : List~Path~
+        + Location(ids : string[], name : string, description : string)
+        + Inventory : Inventory ~~readonly~~
+        + ShortDescription : string ~~override~~
         + FullDescription : string ~~override~~
-        + Exits : Dictionary~string, Location~
+        + Exits : List~Path~
         + Locate(id : string) : GameObject
-        + FindExists() : string
+        + GetExits() : string
+        + AddPath(path : Path) : void
+        + FindExits(direction : string) : Path
+    }
+    class Path {
+        - _endLocation : Location
+        - _lookable : bool
+        + Path(ids : string[], name : string, description : string, endLocation : Location)
+        + EndLocation : Location
+        + Lookable : bool
     }
     class Player {
         - _inventory : Inventory
@@ -49,39 +44,32 @@ class IdentifiableObject {
         + Locate(id : string) : GameObject
         + WhereAmI() : string
         + Arrive() : string
+        + Exit(direction : string) : string
+        + Travel(p : Path) : string
+        + Move(p : Path) : string
     }
     class Command {
         <<abstract>>
-        + Command(ids : string[])
-        + Execute(p : Player, text : string[]) : string ~~abstract~~
+      
     }
-    class LookCommand {
-        + LookCommand()
+    class MoveCommand {
+        + MoveCommand()
         + Execute(p : Player, text : string[]) : string ~~override~~
-        - FetchContainer(p : Player, containerId : string) : IHaveInventory
-        - LookAtIn(thingId : string, container : IHaveInventory) : string
     }
     class Inventory {
-        - _items : List~Item~
-        + Inventory()
-        + ItemList : string
-        + HasItem(id : string) : bool
-        + Put(itm : Item) : void
-        + Take(id : string) : Item
-        + Fetch(id : string) : Item
+     
     }
-    GameObject --|> IdentifiableObject : extends
-    Location --|> GameObject : extends
-    Player --|> GameObject : extends
-    LookCommand --|> Command : extends
-    Command --|> IdentifiableObject : extends
-    Location ..|> IHaveInventory : implements
-    Player ..|> IHaveInventory : implements
-    Location --> Inventory : has
-    Player --> Inventory : has
-    Player --> Location : has
-    Location --> Location : uses exits (Dictionary)
-    LookCommand ..> Player : uses
-    LookCommand ..> IHaveInventory : uses
-
+    GameObject <|-- Location
+    GameObject <|-- Path
+    GameObject <|-- Player
+    Command <|-- MoveCommand
+    IHaveInventory <|.. Location
+    IHaveInventory <|.. Player
+    Location <-- Inventory : contains
+    Location o-- Path : has exits
+    Player <-- Inventory : contains
+    Player --> Location : current location
+    Player ..> Path : uses
+    Path --> Location : has end location
+    MoveCommand ..> Player : uses
 

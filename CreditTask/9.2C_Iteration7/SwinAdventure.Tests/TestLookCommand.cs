@@ -119,7 +119,7 @@ namespace UnitTests
             string testOutPut = look.Execute(testPlayer, new string[] { "look", "around" });
             ClassicAssert.That(testOutPut, Is.EqualTo(excepted));
 
-            excepted = "Error in look input";
+             excepted = "I don\'t know how to look like that";
             testOutPut = look.Execute(testPlayer, new string[] { "hello", "105293041" });
             ClassicAssert.That(testOutPut, Is.EqualTo(excepted));
 
