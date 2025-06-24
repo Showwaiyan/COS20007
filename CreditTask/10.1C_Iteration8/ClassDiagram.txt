@@ -1,0 +1,79 @@
+---
+config:
+  layout: elk
+  look: classic
+  theme: mc
+---
+classDiagram
+    class IHaveInventory {
+        <<interface>>
+        + Locate(id: string) GameObject
+        + Name : string
+        + Inventory : Inventory
+    }
+    class Command {
+        <<abstract>>
+        + Command(ids: string[])
+        + Execute(p: Player, text: string[])* string
+    }
+    class CommandProcessor {
+        - _commands : List~Command~
+        + CommandProcessor()
+        + AddCommand(command: Command) void
+        + Execute(p: Player, input: string) string
+    }
+    class PickUpCommand {
+        + PickUpCommand()
+        + Execute(p: Player, text: string[]) string
+        - FetchContainer(l: Location, containerId: string) IHaveInventory
+        - GetItem(itemId: string, container: IHaveInventory) Item
+    }
+    class PutCommand {
+        + PutCommand()
+        + Execute(p: Player, text: string[]) string
+        - FetchContainer(l: Location, containerId: string) IHaveInventory
+        - PutItem(itm: Item, container: IHaveInventory) Item
+    }
+    class Player {
+        - _inventory : Inventory
+        - _currentLocation : Location
+        + Player(name: string, desc: string, spawnLocation: Location)
+        + FullDescription : string
+        + Inventory : Inventory
+        + CurrentLocation : Location
+        + Locate(id: string) GameObject
+        + WhereAmI() string
+        + Arrive() string
+        + Exit(direction: string) string
+        + Travel(p: Path) string
+        + Move(p: Path) string
+    }
+    class Location {
+        + Locate(id: string) GameObject
+        + ShortDescription : string
+        + Name : string
+        + Inventory : Inventory
+    }
+    class Item {
+        + ShortDescription : string
+    }
+    PickUpCommand --|> Command
+    PutCommand --|> Command
+    Player ..|> IHaveInventory
+    Location ..|> IHaveInventory
+    CommandProcessor o-- Command
+    Player --> Inventory
+    Player --> Location
+    Inventory o-- Item
+    Location --> Inventory
+    Path --o Location
+    Command ..> Player
+    PickUpCommand ..> Player
+    PutCommand ..> Player
+    PickUpCommand ..> IHaveInventory
+    PickUpCommand ..> Item
+    PickUpCommand ..> Location
+    PutCommand ..> IHaveInventory
+    PutCommand ..> Item
+    PutCommand ..> Location
+    Player ..> Path

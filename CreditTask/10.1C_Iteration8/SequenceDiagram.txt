@@ -1,0 +1,30 @@
+---
+config:
+  theme: mc
+---
+sequenceDiagram
+    participant User
+    participant CommandProcessor
+    participant Command1 as Command (Look)
+    participant Command2 as Command (Other)
+    participant Player
+    User->>CommandProcessor: Execute(player, "look at gem in bag")
+    Note over CommandProcessor: Split input into array:<br/>["look", "at", "gem", "in", "bag"]
+    CommandProcessor->>Command1: AreYou("look")
+    Command1-->>CommandProcessor: true
+    Note over CommandProcessor: Found matching command,<br/>call Execute method
+    CommandProcessor->>Command1: Execute(player, ["look", "at", "gem", "in", "bag"])
+    Note over Command1: Internal command processing<br/>(parsing parameters, locating objects,<br/>generating response)
+    Command1->>Player: Various interactions (e.g., Locate(), Inventory access)
+    Player-->>Command1: Return requested data
+    Command1-->>CommandProcessor: "You see a sparkling gem in your bag"
+    CommandProcessor-->>User: "You see a sparkling gem in your bag"
+    Note over User, Player: Alternative flow if no command matches:
+    User->>CommandProcessor: Execute(player, "dance")
+    Note over CommandProcessor: Split input: ["dance"]
+    CommandProcessor->>Command1: AreYou("dance")
+    Command1-->>CommandProcessor: false
+    CommandProcessor->>Command2: AreYou("dance")
+    Command2-->>CommandProcessor: false
+    Note over CommandProcessor: No matching command found
+    CommandProcessor-->>User: "I don't understand dance"
